@@ -1,47 +1,28 @@
-//Pedalbrett for orgeløving på vanlig piano. Med RaspberryPi Pico.
-fotlengde=150;
-steg=50;
-lengde=1400;
-marg =200;//10 cm på hver side til å sage i for tilpassing til det enkelte piano.
-pedalplass=(lengde-marg)/15;
-glipe=2;
-rund=5;
-penta=[0,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,1];
-transpo=7;
+int melody[] = {
+ 45, 65,86, 58, 40, 20, 135,56,75 ,37,50 ,1
+};
 
-difference() {
-union(){
-difference(){
-union(){
-cube([lengde,fotlengde,steg],center=true);
-translate([0,-fotlengde*0.3,35])cube([lengde-marg+pedalplass,fotlengde*0.3,steg*0.4],center=true);}
-for (g=[-(lengde-marg)/2:pedalplass:(lengde-marg)/2]){
-    translate( [g, fotlengde/6, steg/4])minkowski(){
-        cube([pedalplass-rund,0.8*fotlengde,steg*0.7],center=true);
-        sphere(rund);
-        
-    }
-}}
-for (i=[-(lengde-marg)/2:pedalplass:(lengde-marg)/2]){
-    translate( [i, fotlengde/6, steg/4])minkowski(){
-        cube([pedalplass-3*glipe-rund,0.7*fotlengde,steg/2],center=true);
-        sphere(rund);
-        
-    }
-    }
+int duration[] = {
+  2, 2, 2, 2, 2, 2, 2, 2,2,2,2,2,2,2
+};
+
+#include <Stepper.h>
+const int stepsPerRevolution = 200; 
+Stepper myStepper(stepsPerRevolution, 8,9,10,11);            
+int stepCount = 0;  
+
+void setup() {
+Serial.begin(9600);
 }
-for (h=[-7:1:7]){
-        if (penta[h+transpo]==1){
-            translate( [h*pedalplass, 0, steg/2])minkowski(){
-        cube([pedalplass-3*glipe-3*rund,0.5*fotlengde,steg*0.7],center=true);
-        sphere(rund);
-    }}}
 
-
+void loop() {
+  for (int thisNote = 0; thisNote < 12; thisNote++) {  
+   Serial.print("Lyden vi hører nå er ");
+    Serial.println(melody[thisNote]); 
+myStepper.setSpeed(melody[thisNote]);
+    myStepper.step(melody[thisNote]*duration[thisNote]);
+    int pauseBetweenNotes = 200;
+    delay(pauseBetweenNotes); 
+    noTone(1);
+  }
 }
-    for (j=[-7:1:7]){
-        if (penta[j+transpo]==1){
-            translate( [j*pedalplass, 0, steg/2])minkowski(){
-        cube([pedalplass-5*glipe-5*rund,0.4*fotlengde,steg*2/3],center=true);
-        sphere(rund);
-    }}}
