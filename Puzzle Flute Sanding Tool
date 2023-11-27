@@ -1,0 +1,19 @@
+//Puzzle-flute sanding tool, as my printer didn't print them clean enough. 
+//Usage: Put sand paper in the cross slot facing outwards.
+dia=20;
+dypt=15;
+sandpapir=0.2;
+
+difference(){
+cylinder(30,dia/2-sandpapir,dia/2-sandpapir-0.3,center=false,$fn=27);
+translate([0,0,22.5]) {
+cube([1,25,dypt],center=true);
+cube([25,1,dypt],center=true);
+    cylinder(dypt,4,4,center=true);
+}
+
+}
+minkowski(){
+cylinder(15,11,13,center=true,$fn=5);
+    sphere(3,$fn=7);
+}
