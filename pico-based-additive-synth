@@ -1,7 +1,4 @@
-# Work in progress, but still, its a sound! Uses pico audio from pimironi, headphones output.
-# SPDX-FileCopyrightText: 2018 Kattni Rembor for Adafruit Industries
-#
-# SPDX-License-Identifier: MIT
+# Smalhans Pico Synth. Based on 2018 Kattni Rembor's code
 
 """
 CircuitPython I2S Tone playback example.
@@ -18,13 +15,14 @@ import audiobusio
 audio = audiobusio.I2SOut(board.GP10, board.GP11, board.GP9)
 
 tone_volume = 0.02
-frequency1 = 200
-frequency2 = 300
-length1 = 8000 // frequency1
-length2 = 8000 // frequency2
-sine_wave = array.array("h", [0] * length1)
-for i in range(length1):
-    sine_wave[i] = int((math.sin(math.pi * 2 * i / length1)+math.sin(math.pi * 2 * i / (length2))) * tone_volume * (2 ** 15 - 12))
+
+
+genesis = 40
+exodus = 21
+leviticus = 30
+sine_wave = array.array("h", [0] * genesis)
+for i in range(genesis):
+    sine_wave[i] = int((math.sin(math.pi * 2 * i / genesis)+math.sin(math.pi * 2 * i / (exodus)) +math.sin(math.pi * 2 * i / (leviticus))) * tone_volume * (2 ** 15 - 12))
 sine_wave_sample = audiocore.RawSample(sine_wave)
 
 while True:
