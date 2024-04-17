@@ -1,0 +1,88 @@
+//DIN-plug for DIY midi cable and casette tape audio adapter
+
+//PARAMETERS
+outerdia=13.4;
+plunge=10;
+sheet=0.8;
+pindia=1.5;
+wall=1;
+margin=0.2;
+cabledia=5;
+pinfan=7.2;
+$fn=36;
+
+//PARTS
+core();
+shell();
+plugg();
+
+//decoration  
+pins(); //using crimp-on pins of somewhat right dimensions
+screen(); //cutting metal scrap by hand or rather scissors
+  
+//MODULES  
+module plugg(){
+      intersection(){
+    pins();
+    translate([0,0,-plunge+2])
+    cylinder(plunge*1.1,7,7,center=true);  
+  }
+  }
+module core(){difference(){
+    translate([0,0,-1.5*plunge])
+   cylinder(1.5*plunge,outerdia/2,outerdia/2,center=false);
+   translate([0,0,+margin]) 
+    minkowski(){ 
+        screen();
+        sphere(margin,$fn=5);
+}
+pins();
+}
+}
+module pins(){
+    for(i=[-90:45:90])
+    rotate([0,0,i])
+    translate([0,pinfan/2,-1])
+    pin();
+}
+module pin(){
+    color("silver")
+    cylinder(plunge,pindia/2,pindia/2,center=false);
+    translate([0,0,-1.6*plunge])
+    cylinder(plunge*1.6,pindia*2,pindia*0.7,center=false);
+    color("silver")
+    translate([0,0,plunge])cylinder(pindia/2,pindia/2,pindia/6,center=false);
+}
+module screen(){
+    
+    color("silver")difference(){
+        cylinder(plunge*2,outerdia/2,outerdia/2,center=true);
+        cylinder(plunge*2+1,outerdia/2-sheet,outerdia/2-sheet,center=true);
+        kile();
+    }
+}
+module kile(){
+    for(i=[0:120:359])
+    rotate([0,0,i])
+    translate([0,outerdia/2+sheet,0])
+    rotate([90,0,0])
+    linear_extrude(5)
+ polygon([[-3,0],[3,0],[0,-plunge-3]]);   
+}
+module shell(){
+difference(){
+minkowski(){
+   color("green")union(){
+       translate([0,0,-1.5*plunge])
+    cylinder(1.5*plunge,outerdia/2,outerdia/2,center=false);
+    translate([0,0,-2.5*plunge])
+   cylinder(plunge,outerdia/4,outerdia/2,center=false);
+   }
+   sphere(wall,$fn=5);
+   }
+   cylinder(60,cabledia/2,cabledia/1,center=true); 
+   translate([0,0,-1.7*plunge+wall])
+   cylinder(1.7*plunge,outerdia/2+margin,outerdia/2+margin,center=false); 
+      translate([0,0,-1.6*plunge+wall])sphere(outerdia/2+margin);
+}    
+}
