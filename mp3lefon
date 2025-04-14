@@ -1,14 +1,15 @@
-//mp3lefon, inspirert av gamledager og av Chris Borge på youtube.
+//MP3lefon, inspirert av gamledager og av Chris Borge på youtube.
 differanse=12.5;
-detail=20;
-telefon();
+detail=70;
+//telefon();
+lokk();
+//hoyttaler();
+//uno();
 module telefon(){
 apparat();
 roer();
 }
-//lokk();
-//hoyttaler();
-//uno();
+
 module uno(){
 cube([53,68,20],center=true);
 }
