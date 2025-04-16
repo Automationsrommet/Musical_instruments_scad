@@ -1,9 +1,15 @@
 //MP3lefon, inspirert av gamledager og av Chris Borge på youtube.
 differanse=12.5;
 detail=70;
-telefon(1,0,0);
+telefon(0,1,0);
+//jerndeksel();
+//translate([80,0,25.5])
+//rotate([-8,0,90])
+//kilesprekkroer();
+
 //jafslokk();
 //screws();
+//translate([0,0,-50])kile();
 //pads(1);
 //knapper();
 //translate([00,0,0])knapphull();
@@ -11,12 +17,23 @@ telefon(1,0,0);
 //hoyttaler();
 //uno();
 //bunnpannen();
-//roer(1);
+
+
 module telefon(medapparat,medroer,medlokk,medknapper){
 if(medapparat==1){apparat(medknapper);}
 if(medroer==1){roer(medlokk);}
 }
-
+module barreljack(){
+translate([0,0,-22])
+rotate([-90,0,41])
+translate([0,0,-51.5])
+rotate([-5,19,0])
+{
+cube ([10,12,7],center=true);
+translate([0,0,10.5])
+cube([10,20,14],center=true);
+}
+}
 module pads(rund){difference(){
 translate([0,0,-42+2])
 for(n=[-1:2:1])
@@ -77,7 +94,7 @@ sphere(8);
 }
 module screw(d,mar){
     cylinder(30-5,1.25+mar,1.25+mar,center=false,$fn=d);
-    translate([0,0,d-5])cylinder(5,1.25+mar,0,center=false,$fn=d);
+    //translate([0,0,d-5])cylinder(5,1.25+mar,0,center=false,$fn=d);
     cylinder(5,9/2,0,center=false,$fn=d);
     //1.87/6
    
@@ -123,6 +140,7 @@ circle(30-11,$fn=detail);
 sphere(2.5,$fn=detail);
 }
 pads(1.2);
+screws();
 }
 }
 module bunnpanne(){
@@ -168,6 +186,7 @@ for (m=[-1:2:1])
 translate([m*22.5,-3,20])
 rotate([105,0,m*84.6])
 cylinder(5,5,21,center=true,$fn=detail);
+
 }
 translate([0,0,-65-3])
 for(n=[-30:5:30])
@@ -193,9 +212,51 @@ text("MP3LEFON",7);
 knapphull();
 pads(1.2);
 screws();
+translate([-2,-3,-5])kilesprekk();
+barreljack();
 }
 if(medknapper==1){knapper();}
 
+}
+module kilesprekkroer(){
+translate([-0,-16,-16])
+rotate([90,0,-00])
+cylinder(40,5,5,center=true,$fn=20);
+translate([-0,-08,-19])
+rotate([0,0,-00])
+cube([13,2,24],center=true);
+translate([-0,-08,-16-5])
+rotate([0,0,-00])
+cube([10,4,17],center=true);
+
+translate([-0,-16,-26])
+rotate([90,0,-00+180])
+translate([0,0,5])
+cylinder(30,1.5,1.5,center=false,$fn=7);
+}
+module kilesprekk(){
+translate([-35,-36,-16])
+rotate([90,0,-50])
+cylinder(40,5,5,center=true,$fn=20);
+translate([-27,-28,-19])
+rotate([0,0,-50])
+cube([13,2,24],center=true);
+translate([-27,-28,-16-5])
+rotate([0,0,-50])
+cube([10,4,17],center=true);
+
+translate([-35,-36,-26])
+rotate([90,0,-50+180])
+translate([0,0,1])
+cylinder(30,1.5,1.5,center=false,$fn=7);
+}
+module kile(){
+difference(){
+cube([12,1.6,20],center=true);
+rotate([90,0,0])cylinder(4,3,3,center=true);
+translate([0,0,-10])cylinder(4,2,2,center=true,$fn=7);
+translate([0,0,15])cube([6,4,30],center=true);
+}
 }
 module knapper(){
 for(j=[0:1:9])
@@ -219,7 +280,7 @@ minkowski(){
 translate([2.5,2.5,-1])cylinder(2,3.5,3.5,center=true,$fn=detail);
 sphere(2.5);
 }
-translate([2.5,2.5,-5])cube([6,6,10],center=true);
+translate([2.5,2.5,-5])cube([6.5,6.5,10],center=true);
 for(u=[-1:2:1])
 for(i=[-1:2:1])
 translate([2.5+3*u,2.5+3*i,-17])cylinder(27,4.5,1,$fn=4,center=true);
@@ -235,24 +296,66 @@ sphere(2);
 linear_extrude(2)
 text(str(tall),6);
 }
-translate([0,0,-8])cube([5,5,8]);
+translate([0,0,-8])cube([5.5,5.5,8]);
 }
 
 module roer(deksel){
+difference(){
 for(i=[-1:2:1])
 translate([i*65,0,0])
 rotate([5,0,i*90])klump(deksel);
+translate([80,0,25.5])
+rotate([-8,0,90])
+kilesprekkroer();
+}
 handtak();
 
 }
-
+module jerndeksel(){
+difference(){
+jernholder(2);
+jernholder(0);
+for(p=[-1:2:1])
+translate([p*15,0,20])
+cylinder(18,2,2,center=true,$fn=5);
+translate([0,10,20])
+cube([50,16,14],center=true);
+translate([0,-12,10])
+cube([50,10,40],center=true);
+translate([0,-0,-5])
+cube([50,15,5],center=true);
+}
+}
+module jernholder(deksel){
+intersection(){
+sphere(14-deksel*2+differanse);
+union(){
+translate([0,0,8])
+rotate([-55,0,0])
+translate([0,0,16])
+cylinder(48+deksel*2,13/2+deksel,13/2+deksel,center=true);
+for(p=[-1:2:1]){
+translate([p*15,0,20])
+cube([10+deksel*2,10+deksel*2,14+deksel*2],center=true);
+translate([p*5,0,20])
+cube([10+deksel*2,10+deksel*2,14+deksel*2],center=true);
+}
+}
+}
+}
 module klump(deksel){
 difference(){
 sphere(20+differanse,$fn=detail);
 sphere(15+differanse);
 translate([0,12,20])
-sphere(12);
+sphere(11);
 translate([0,0,-50])cube(100,center=true);
+
+
+translate([0,0,8])
+rotate([-55,0,0])
+translate([0,0,16])
+cylinder(50,12/2,12/2,center=true);
 }
 difference(){
 translate([0,0,-2.5])cylinder(5,16+differanse,16+differanse,center=true);
@@ -264,7 +367,14 @@ translate([16+differanse,0,-4.5+o/360])
 rotate([2.2,45,0])
 cube(1,center=true);
 if (deksel==1){lokk();}
-
+for(p=[-1:2:1]){
+translate([p*15,0,20])
+difference(){
+cube([10,10,10],center=true);
+//translate([p*15,0,20])
+cylinder(12,2,1,center=true,$fn=5);
+}
+}
 }
 module lokk(){
 difference(){
@@ -283,15 +393,20 @@ cylinder(20,13.5+differanse,13.5+differanse,center=true);
 }
 }
 module handtak(){
-
+difference(){
 translate([0,0,-65-3])
-for(i=[-30:5:30])
+for(i=[-35:5:35])
 rotate([0,i,0])
 translate([0,0,105])
 resize([11,35,20])
 difference(){
 rotate([0,90,0])cylinder(20,15,15,center=true);
 rotate([0,90,0])cylinder(21,11,11,center=true);
+}
+
+for(j=[-1:2:1])
+translate([j*65,0,0])
+sphere(15+differanse);
 }
 }
 module hoyttaler(){
