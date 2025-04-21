@@ -1,0 +1,477 @@
+// This is a mp3-player with nine buttons and Adafruit Music Maker Shield.
+// include SPI, MP3 and SD libraries
+#include <SPI.h>
+#include <Adafruit_VS1053.h>
+#include <SD.h>
+
+// define the pins used
+//#define CLK 13       // SPI Clock, shared with SD card
+//#define MISO 12      // Input data, from VS1053/SD card
+//#define MOSI 11      // Output data, to VS1053/SD card
+// Connect CLK, MISO and MOSI to hardware SPI pins. 
+// See http://arduino.cc/en/Reference/SPI "Connections"
+
+// These are the pins used for the breakout example
+//#define BREAKOUT_RESET  9      // VS1053 reset pin (output)
+//#define BREAKOUT_CS     10     // VS1053 chip select pin (output)
+//#define BREAKOUT_DCS    8      // VS1053 Data/command select pin (output)
+// These are the pins used for the music maker shield
+#define SHIELD_RESET  -1      // VS1053 reset pin (unused!)
+#define SHIELD_CS     7      // VS1053 chip select pin (output)
+#define SHIELD_DCS    6      // VS1053 Data/command select pin (output)
+
+// These are common pins between breakout and shield
+#define CARDCS 4     // Card chip select pin
+// DREQ should be an Int pin, see http://arduino.cc/en/Reference/attachInterrupt
+#define DREQ 3       // VS1053 Data request, ideally an Interrupt pin
+
+Adafruit_VS1053_FilePlayer musicPlayer = 
+  // create breakout-example object!
+  //Adafruit_VS1053_FilePlayer(BREAKOUT_RESET, BREAKOUT_CS, BREAKOUT_DCS, DREQ, CARDCS);
+  // create shield-example object!
+  Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
+
+bool siffer1=0;
+bool siffer2=0;
+unsigned char tiertall=0;
+unsigned char enertall=0;
+bool presens1=0;
+bool preteritum1=0;
+bool presens2=0;
+bool preteritum2=0;
+bool presens3=0;
+bool preteritum3=0;
+bool presens4=0;
+bool preteritum4=0;
+bool presens5=0;
+bool preteritum5=0;
+bool presens6=0;
+bool preteritum6=0;
+bool presens7=0;
+bool preteritum7=0;
+bool presens8=0;
+bool preteritum8=0;
+bool presens9=0;
+bool preteritum9=0;
+bool presens0=0;
+bool preteritum0=0;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println(F("Dette var konfirmasjonsgave til noen i april 2025"));
+
+  if (! musicPlayer.begin()) { // initialise the music player
+     Serial.println(F("Couldn't find VS1053, do you have the right pins defined?"));
+     while (1);
+  }
+  Serial.println(F("Her er filene på SD-kortet:"));
+  
+ pinMode(A0,INPUT_PULLUP);
+  pinMode(A1,INPUT_PULLUP);
+  pinMode(2,INPUT_PULLUP);
+  pinMode(5,INPUT_PULLUP);
+  pinMode(8,INPUT_PULLUP);
+  pinMode(9,INPUT_PULLUP);
+ pinMode(A2,INPUT_PULLUP);
+ pinMode(A3,INPUT_PULLUP);
+ pinMode(12,INPUT_PULLUP);
+  pinMode(A4,INPUT_PULLUP);
+  
+   if (!SD.begin(CARDCS)) {
+    Serial.println(F("SD failed, or not present"));
+    while (1);  // don't do anything more
+  }
+
+  // list files
+  printDirectory(SD.open("/"), 0);
+  
+  // Set volume for left, right channels. lower numbers == louder volume!
+  musicPlayer.setVolume(0,0);
+
+  // Timer interrupts are not suggested, better to use DREQ interrupt!
+  //musicPlayer.useInterrupt(VS1053_FILEPLAYER_TIMER0_INT); // timer int
+
+  // If DREQ is on an interrupt pin (on uno, #2 or #3) we can do background
+  // audio playing
+  musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT);  // DREQ int
+  
+  // Play one file, don't return until complete
+  //Serial.println(F("Playing track 003"));
+  //musicPlayer.playFullFile("/track003.mp3");
+  // Play another file in the background, REQUIRES interrupts!
+ // Serial.println(F("Playing track 004"));
+  //musicPlayer.startPlayingFile("/track004.mp4");
+}
+
+void loop() {
+
+  
+presens1=digitalRead(A0);
+presens2=digitalRead(A1);
+presens3=digitalRead(2);
+presens4=digitalRead(5);
+presens5=digitalRead(8);
+presens6=digitalRead(9);
+presens7=digitalRead(A2);
+presens8=digitalRead(A3);
+presens9=digitalRead(12);
+presens0=digitalRead(A4);
+if (presens1 != preteritum1){
+if (presens1 == LOW){
+if (siffer1==HIGH){
+  tiertall=1;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=1;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(11) : musicPlayer.playFullFile("/track011.mp3"); break;
+  //case(21) : musicPlayer.playFullFile("/track021.mp3"); break;
+  //case(31) : musicPlayer.playFullFile("/track031.mp3"); break;
+  //case(41) : musicPlayer.playFullFile("/track041.mp3"); break;
+  //case(51) : musicPlayer.playFullFile("/track051.mp3"); break;
+  //case(61) : musicPlayer.playFullFile("/track061.mp3"); break;
+  case(71) : musicPlayer.playFullFile("/track071.mp3"); break;
+  //case(81) : musicPlayer.playFullFile("/track081.mp3"); break;
+  //case(91) : musicPlayer.playFullFile("/track091.mp3"); break;
+  }
+}
+else{startsang(1);
+musicPlayer.playFullFile("/track001.mp3");
+}
+}
+}
+if (presens2 != preteritum2){
+if (presens2 == LOW){
+  if (siffer1==HIGH){
+  tiertall=2;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=2;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(12) : musicPlayer.playFullFile("/track012.mp3"); break;
+  //case(22) : musicPlayer.playFullFile("/track022.mp3"); break;
+  //case(32) : musicPlayer.playFullFile("/track032.mp3"); break;
+  //case(42) : musicPlayer.playFullFile("/track042.mp3"); break;
+  //case(52) : musicPlayer.playFullFile("/track052.mp3"); break;
+  //case(62) : musicPlayer.playFullFile("/track062.mp3"); break;
+  case(72) : musicPlayer.playFullFile("/track072.mp3"); break;
+  //case(82) : musicPlayer.playFullFile("/track082.mp3"); break;
+  //case(92) : musicPlayer.playFullFile("/track092.mp3"); break;
+  }
+  }
+else{ 
+startsang(2);
+musicPlayer.playFullFile("/track002.mp3");
+}
+}
+}
+if (presens3 != preteritum3){
+if (presens3 == LOW){
+  if (siffer1==HIGH){
+  tiertall=3;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=3;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(13) : musicPlayer.playFullFile("/track013.mp3"); break;
+  //case(23) : musicPlayer.playFullFile("/track023.mp3"); break;
+  //case(33) : musicPlayer.playFullFile("/track033.mp3"); break;
+  //case(43) : musicPlayer.playFullFile("/track043.mp3"); break;
+  //case(53) : musicPlayer.playFullFile("/track053.mp3"); break;
+  //case(63) : musicPlayer.playFullFile("/track063.mp3"); break;
+  case(73) : musicPlayer.playFullFile("/track073.mp3"); break;
+  //case(83) : musicPlayer.playFullFile("/track083.mp3"); break;
+  //case(93) : musicPlayer.playFullFile("/track093.mp3"); break;
+  }
+  }
+else{
+startsang(03);
+musicPlayer.playFullFile("/track003.mp3");
+}
+}
+}
+if (presens4 != preteritum4){
+if (presens4 == LOW){
+  if (siffer1==HIGH){
+  tiertall=4;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=4;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(14) : musicPlayer.playFullFile("/track014.mp3"); break;
+  //case(24) : musicPlayer.playFullFile("/track024.mp3"); break;
+  //case(34) : musicPlayer.playFullFile("/track034.mp3"); break;
+  //case(44) : musicPlayer.playFullFile("/track044.mp3"); break;
+  //case(54) : musicPlayer.playFullFile("/track054.mp3"); break;
+  //case(64) : musicPlayer.playFullFile("/track064.mp3"); break;
+  case(74) : musicPlayer.playFullFile("/track074.mp3"); break;
+  //case(84) : musicPlayer.playFullFile("/track084.mp3"); break;
+  //case(94) : musicPlayer.playFullFile("/track094.mp3"); break;
+  }
+  }
+else{
+startsang(04);
+musicPlayer.playFullFile("/track004.mp3");
+}
+}
+}
+if (presens5 != preteritum5){
+if (presens5 == LOW){
+  if (siffer1==HIGH){
+  tiertall=5;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=5;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(15) : musicPlayer.playFullFile("/track015.mp3"); break;
+  //case(25) : musicPlayer.playFullFile("/track025.mp3"); break;
+  //case(35) : musicPlayer.playFullFile("/track035.mp3"); break;
+  //case(45) : musicPlayer.playFullFile("/track045.mp3"); break;
+  //case(55) : musicPlayer.playFullFile("/track055.mp3"); break;
+  //case(65) : musicPlayer.playFullFile("/track065.mp3"); break;
+  case(75) : musicPlayer.playFullFile("/track075.mp3"); break;
+  //case(85) : musicPlayer.playFullFile("/track085.mp3"); break;
+  //case(95) : musicPlayer.playFullFile("/track095.mp3"); break;
+  }
+  }
+else{
+startsang(05);
+musicPlayer.playFullFile("/track005.mp3");
+}
+}
+}
+if (presens6 != preteritum6){
+if (presens6 == LOW){
+  if (siffer1==HIGH){
+  tiertall=6;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=6;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(16) : musicPlayer.playFullFile("/track016.mp3"); break;
+  //case(26) : musicPlayer.playFullFile("/track026.mp3"); break;
+  //case(36) : musicPlayer.playFullFile("/track036.mp3"); break;
+  //case(46) : musicPlayer.playFullFile("/track046.mp3"); break;
+  //case(56) : musicPlayer.playFullFile("/track056.mp3"); break;
+  //case(66) : musicPlayer.playFullFile("/track066.mp3"); break;
+  case(76) : musicPlayer.playFullFile("/track076.mp3"); break;
+  //case(86) : musicPlayer.playFullFile("/track086.mp3"); break;
+  //case(96) : musicPlayer.playFullFile("/track096.mp3"); break;
+  }
+  }
+else{
+startsang(06);
+musicPlayer.playFullFile("/track006.mp3");
+}
+}
+}
+if (presens7 != preteritum7){
+if (presens7 == LOW){
+  if (siffer1==HIGH){
+  tiertall=7;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=7;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(17) : musicPlayer.playFullFile("/track017.mp3"); break;
+  //case(27) : musicPlayer.playFullFile("/track027.mp3"); break;
+  //case(37) : musicPlayer.playFullFile("/track037.mp3"); break;
+  //case(47) : musicPlayer.playFullFile("/track047.mp3"); break;
+  //case(57) : musicPlayer.playFullFile("/track057.mp3"); break;
+  //case(67) : musicPlayer.playFullFile("/track067.mp3"); break;
+  case(77) : musicPlayer.playFullFile("/track077.mp3"); break;
+  //case(87) : musicPlayer.playFullFile("/track087.mp3"); break;
+  //case(97) : musicPlayer.playFullFile("/track097.mp3"); break;
+  }
+  }
+else{
+startsang(07);
+musicPlayer.playFullFile("/track007.mp3");
+}
+}
+}
+if (presens8 != preteritum8){
+if (presens8 == LOW){
+  if (siffer1==HIGH){
+  tiertall=8;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=8;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(18) : musicPlayer.playFullFile("/track018.mp3"); break;
+  //case(28) : musicPlayer.playFullFile("/track028.mp3"); break;
+  //case(38) : musicPlayer.playFullFile("/track038.mp3"); break;
+  //case(48) : musicPlayer.playFullFile("/track048.mp3"); break;
+  //case(58) : musicPlayer.playFullFile("/track058.mp3"); break;
+  //case(68) : musicPlayer.playFullFile("/track068.mp3"); break;
+  case(78) : musicPlayer.playFullFile("/track078.mp3"); break;
+  //case(88) : musicPlayer.playFullFile("/track088.mp3"); break;
+  //case(98) : musicPlayer.playFullFile("/track098.mp3"); break;
+  }
+  }
+else{
+startsang(8);
+musicPlayer.playFullFile("/track008.mp3");
+}
+}
+}
+if (presens9 != preteritum9){
+if (presens9 == LOW){
+if (siffer1==HIGH){
+  tiertall=9;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=9;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+switch (tiertall*10+enertall){
+  case(19) : musicPlayer.playFullFile("/track019.mp3"); break;
+  //case(29) : musicPlayer.playFullFile("/track029.mp3"); break;
+  //case(39) : musicPlayer.playFullFile("/track039.mp3"); break;
+  //case(49) : musicPlayer.playFullFile("/track049.mp3"); break;
+  //case(59) : musicPlayer.playFullFile("/track059.mp3"); break;
+  //case(69) : musicPlayer.playFullFile("/track069.mp3"); break;
+  case(79) : musicPlayer.playFullFile("/track079.mp3"); break;
+  //case(89) : musicPlayer.playFullFile("/track089.mp3"); break;
+  //case(99) : musicPlayer.playFullFile("/track099.mp3"); break;
+  }
+  }
+else{
+startsang(9);
+musicPlayer.playFullFile("/track009.mp3");
+}
+}
+}
+if (presens0 != preteritum0){
+if (presens0 == LOW){
+if (siffer1==HIGH){
+  tiertall=0;
+  siffer1=LOW;
+  siffer2=HIGH;
+}
+else if (siffer2==HIGH){
+  enertall=0;
+  siffer2=LOW;
+  startsang(tiertall*10+enertall);
+  switch (tiertall*10+enertall){
+  case(10) : musicPlayer.playFullFile("/track010.mp3"); break;
+  case(20) : musicPlayer.playFullFile("/track020.mp3"); break;
+  //case(30) : musicPlayer.playFullFile("/track030.mp3"); break;
+  //case(40) : musicPlayer.playFullFile("/track040.mp3"); break;
+  //case(50) : musicPlayer.playFullFile("/track050.mp3"); break;
+  //case(60) : musicPlayer.playFullFile("/track060.mp3"); break;
+  case(70) : musicPlayer.playFullFile("/track070.mp3"); break;
+  //case(80) : musicPlayer.playFullFile("/track080.mp3"); break;
+  //case(90) : musicPlayer.playFullFile("/track090.mp3"); break;
+  }
+  }
+else{
+  siffer1=HIGH;
+  Serial.print(F("Tosiffertall kommer:  "));
+}
+}
+}
+
+
+  //if (musicPlayer.stopped()) {
+   // Serial.println("Done playing music");
+   // while (1) {
+     // delay(10);  // we're done! do nothing...
+    //}
+ // }
+  if (Serial.available()) {
+    char c = Serial.read();
+    
+    // if we get an 's' on the serial console, stop!
+    if (c == 's') {
+      musicPlayer.stopPlaying();
+    }
+    
+    // if we get an 'p' on the serial console, pause/unpause!
+    if (c == 'p') {
+      if (! musicPlayer.paused()) {
+        Serial.println(F("Paused"));
+        musicPlayer.pausePlaying(true);
+      } else { 
+        Serial.println(F("Resumed"));
+        musicPlayer.pausePlaying(false);
+      }
+    }
+  }
+preteritum1=presens1;
+preteritum2=presens2;
+preteritum3=presens3;
+preteritum4=presens4;
+preteritum5=presens5;
+preteritum6=presens6;
+preteritum7=presens7;
+preteritum8=presens8;
+preteritum9=presens9;
+preteritum0=presens0;
+  delay(10);
+}
+
+
+/// File listing helper
+void printDirectory(File dir, int numTabs) {
+   while(true) {
+     
+     File entry =  dir.openNextFile();
+     if (! entry) {
+       // no more files
+       //Serial.println("**nomorefiles**");
+       break;
+     }
+     for (uint8_t i=0; i<numTabs; i++) {
+       Serial.print(('\t'));
+     }
+     Serial.print(entry.name());
+     if (entry.isDirectory()) {
+       Serial.println(F("/"));
+       printDirectory(entry, numTabs+1);
+     } else {
+       // files have sizes, directories do not
+       Serial.print(F("\t\t"));
+       Serial.println(entry.size(), DEC);
+     }
+     entry.close();
+   }
+}
+void startsang(unsigned char nummer){
+Serial.print(F("Nå spilles sang nummer "));
+Serial.println(nummer);
+}
