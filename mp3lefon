@@ -204,7 +204,7 @@ jern(1);
 translate([-17,-28-differanse/2,-2])
 rotate([70,0,0])
 linear_extrude(15)
-text("MAJAS",7);
+text("NOENS",7);
 translate([-27,-32-differanse/2,-15])
 rotate([70,0,0])
 linear_extrude(15)
