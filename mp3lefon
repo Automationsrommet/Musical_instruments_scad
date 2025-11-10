@@ -1,7 +1,23 @@
 //MP3lefon, inspirert av gamledager og av Chris Borge på youtube.
 differanse=12.5;
 detail=70;
-telefon(0,1,0);
+
+hoyde=14;
+bredde=14;
+trinn=2.5;
+bukter=5;
+rund=2;
+kanter=9;
+hushoyde=70;
+husbredde=100;
+kolonner=3;
+rader=4;
+
+
+telefon(1,0,0,0);
+
+//knapp();
+//overgang();
 //jerndeksel();
 //translate([80,0,25.5])
 //rotate([-8,0,90])
@@ -110,22 +126,22 @@ module screw(d,mar){
     }
     
 module uno(){
-translate([0,1,-15])
+translate([0,1,-25])
 rotate([-5,0,0])
-minkowski(){
-resize([53,68,30])
+//minkowski(){
+resize([53,68,10])
 rotate([0,0,45])
 cylinder(2,1,0,$fn=4,center=false);
-sphere(2);
-}
+//sphere(2);
+//}
 
 
-translate([0,0,-25])
+translate([0,0,-25-5])
 rotate([-5,0,0])
-minkowski(){
-cube([53,68,20],center=true);
-sphere(2);
-}
+//minkowski(){
+cube([53+8,68-4,20-10],center=true);
+//sphere(2);
+//}
 }
 module bunnpannen(){
 difference(){
@@ -158,7 +174,7 @@ sphere(3,$fn=detail);
 module apparat(medknapper){
 difference(){
 minkowski(){
-sphere(1);
+sphere(1,$fn=5);
 difference(){
 union(){
 translate([0,10,-30])
@@ -197,8 +213,8 @@ rotate([0,90,0])cylinder(20,15,15,center=true);
 
 bunnpanne();
 uno();
-jafs();
-jern(1);
+//jafs();
+//jern(1);
 }
 }
 translate([-17,-28-differanse/2,-2])
@@ -209,13 +225,22 @@ translate([-27,-32-differanse/2,-15])
 rotate([70,0,0])
 linear_extrude(15)
 text("MP3LEFON",7);
-knapphull();
+//knapphull();
 pads(1.2);
+translate([0,0,-2])
 screws();
 translate([-2,-3,-5])kilesprekk();
 barreljack();
+//}
+//if(medknapper==1){knapper();
+translate([0,34,-6])
+rotate([0,51,90])
+knapper();
+translate([0,10,-30])
+rotate([42,0,0])
+cube([45,30,70],center=true);
+translate([0,-5,-50])cylinder(45,40,20,center=false);
 }
-if(medknapper==1){knapper();}
 
 }
 module kilesprekkroer(){
@@ -412,4 +437,169 @@ sphere(15+differanse);
 module hoyttaler(){
 cylinder(4,57/2,57/2,center=false);
 cylinder(20,32/2,32/2, center=false);
+}
+
+
+
+//hus();
+//kilen();
+//translate([bredde+3,hoyde+1,0])knapp();
+//translate([bredde-1,hoyde+1,2])innsats();
+//overgang();
+
+module overgang(){
+difference(){
+union(){
+intersection(){
+translate([bredde-1,hoyde+1,2])translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(8,4,4,center=false,$fn=4);;
+translate([bredde+1,hoyde+1,2])translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(10,4,4,center=false,$fn=4);
+}
+difference(){
+translate([bredde-1,hoyde+1,0])translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(10,4,4,center=false,$fn=4);
+minkowski(){
+translate([bredde-1,hoyde+1,2])translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(10,4,4,center=false,$fn=4);
+cube(0.8);
+}}}
+translate([bredde-1,hoyde+1,-(bukter*trinn)-trinn-1/2+8.5+2])
+cube([30,2,2],center=true);
+translate([bredde-1,hoyde+1,-(bukter*trinn)-trinn-1/2+8.5-6])
+cube([30,2,2],center=true);
+translate([bredde+10,hoyde+1,-(bukter*trinn)-trinn-1/2+8])
+cube([2,2,20],center=true);
+translate([bredde+4.5,hoyde+1,-(bukter*trinn)-trinn-1/2+8])
+cube([1.5,1.5,20],center=true);
+}}
+
+module hus(){
+difference(){
+minkowski(){
+translate([0,0,-14.5])
+cube([husbredde-2*(7.5),kolonner*hoyde,24],center=true);
+cylinder(6,7.5,3.5,center=false,$fn=kanter*2);
+}
+knapper();
+
+translate([0,0,-27+5])cube([36,1000,2.5],center=true);
+translate([0,0,-27+3])cube([30,1000,6],center=true);
+
+translate([husbredde/2-15,0,-25])cube([20,50,15],center=true);
+translate([0,0,-20])cube([90,10,8],center=true);
+translate([0,-15,-20])cube([90,10,8],center=true);
+translate([0,15,-20])cube([90,10,8],center=true);
+for(k=[-rader/2+1/2:1:rader/2])
+translate([k*(bredde+2)-3,5,0])kile();
+translate([0,24.5,-15])cube([90,2,26],center=true);
+translate([0,-24.5,-15])cube([90,2,26],center=true);
+translate([husbredde/2,25,-16])
+rotate([0,90,45])
+cylinder(20,3,3,center=true);
+translate([husbredde/2,25,-22])
+rotate([0,90,45])
+cylinder(20,3,3,center=true);
+for(i=[-(rader-1)/2+1/2:1:(rader-1)/2])
+for(j=[-(kolonner-1)/2+1/2:1:(kolonner-1)/2])
+translate([i*bredde*1.1,j*hoyde*1.1,-28])
+cylinder(30,1,1,center=false);
+}
+}
+
+
+module knapper(){
+for(i=[-rader/2+1/2:1:rader/2])
+for(j=[-kolonner/2+1/2:1:kolonner/2]){
+translate([i*bredde*1.1,j*hoyde*1.1,0])
+rotate([0,0,0]){
+knappeplass();
+}
+}
+}
+
+module kile(){
+translate([0,0,-11.4])
+cube([8,60,1.7],center=true);
+}
+module kilen(){
+translate([0,0,-11.3])
+cube([7,50,1],center=true);
+}
+module knappeplass(){
+translate([0,0,-14])
+linear_extrude(17.5)
+minkowski(){
+square([bredde-2*rund,hoyde-2*rund],center=true);
+circle(rund+0.6 ,$fn=kanter);
+}
+translate([bredde/2-3,0,-(bukter*trinn)-trinn-1/2+0.5])
+cylinder(10+1,4+1,4+1,center=false,$fn=4);
+translate([bredde/2-3,0,-(bukter*trinn)-trinn-1/2])
+cylinder(60+1,2,2,center=true,$fn=4);
+translate([bredde/3,0,-3])
+cube([6,bredde+4,8],center=true);
+}
+
+module innsats(){
+difference(){
+translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(10,4,4,center=false,$fn=4);
+translate([bredde/2,0,-(bukter*trinn)-trinn-1/2+8.5+2])
+cube([20,2,2],center=true);
+translate([bredde/2,0,-(bukter*trinn)-trinn-1/2+8.5+2-10])
+cube([20,2,2],center=true);
+translate([bredde/2+2.9,0,-(bukter*trinn)-trinn-1/2+8])
+rotate([0,70,0])
+cube([20,2,2],center=true);
+translate([bredde/2-4,0,-(bukter*trinn)-trinn-1/2+8])
+rotate([0,70,0])
+cube([20,2,2],center=true);
+translate([bredde/2+2.8,0,-(bukter*trinn)-trinn-1/2+8])
+rotate([0,90,0])
+cube([20,2,2],center=true);
+}
+}
+
+module knapp(){
+intersection(){
+translate([0,0,-25])
+linear_extrude(50)
+minkowski(){
+square([bredde-2*rund,hoyde-2*rund],center=true);
+circle(rund,$fn=kanter);
+}
+difference(){
+union(){
+cylinder(8,(hoyde+bredde)/2,(hoyde+bredde)/5,center=false,$fn=kanter*2);
+translate([0,hoyde/2,-trinn*bukter-trinn])
+rotate([90,0,0])
+fjaer();
+}
+translate([bredde/2,0,-(bukter*trinn)-trinn-1/2])
+cylinder(13,4.5,4.5,center=false,$fn=4);
+translate([0,0,46])sphere(40,$fn=kanter*3);
+}
+}
+
+}
+
+module fjaer(){
+linear_extrude(hoyde){
+siksak();
+translate([bredde/2-1.7,(trinn*bukter)/2+2*trinn])
+difference(){
+circle(2);
+circle(1);
+}
+}
+}
+
+module siksak(){
+for(i=[0:1:bukter]){
+translate([0,i*trinn])
+square([bredde,1],center=true);
+translate([(bredde/2-1/2)*cos(180*i),i*trinn+trinn/2])
+square([1,trinn],center=true);
+}
 }
